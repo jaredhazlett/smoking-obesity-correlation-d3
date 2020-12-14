@@ -56,9 +56,10 @@ var svg = d3
         .attr("cx", d => xIncomeScale(d.income))
         .attr("cy", d => ySmokesScale(d.smokes))
         .attr("r", "10")
-        .attr("fill", "gold")
+        .attr("fill", "orange")
         .attr("stroke-width", "1")
         .attr("stroke", "black")
+        .attr("opacity", ".5");
 
     chartGroup.append("text")
       .attr("transform", "rotate(-90)")
@@ -73,7 +74,10 @@ var svg = d3
       .attr("class", "axisText")
       .text("Income in USD");
 
-    circlesGroup.append("text")
-    	.
+	var text = circlesGroup.selectAll("text")
+		.data(healthData)
+		.enter()
+		.append("text")
+		.attr("")
 
   })
