@@ -1,12 +1,12 @@
 // @TODO: YOUR CODE HERE!
-var svgWidth = 960;
-var svgHeight = 500;
+var svgWidth = 1300;
+var svgHeight = 1000;
 
 var margin = {
   top: 20,
   right: 40,
   bottom: 80,
-  left: 100
+  left: 80
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -27,20 +27,22 @@ var svg = d3
 
   	//parse the data
   	healthData.forEach(function(data) {
-  		data.income = +data.income
-  		data.smokes = +data.smokes;
+  		data.smokes = +data.smokes
+  		data.obesity = +data.obesity
+  		data.id = +data.id
+
   	});
 
-  	var xIncomeScale = d3.scaleLinear()
-  		.domain(d3.extent(healthData, d => d.income))
+  	var xSmokesScale = d3.scaleLinear()
+  		.domain([(d3.min(healthData, d => d.smokes)), d3.max(healthData, d => d.smokes)])
   		.range([0, width]);
 
-  	var ySmokesScale = d3.scaleLinear()
-  		.domain([(d3.min(healthData, d => d.smokes * .8)), d3.max(healthData, d => d.smokes)])
+  	var yObesityScale = d3.scaleLinear()
+  		.domain([(d3.min(healthData, d => d.obesity)), d3.max(healthData, d => d.obesity)])
   		.range([height, 0]);
 
-  	var xAxis = d3.axisBottom(xIncomeScale)
-  	var yAxis = d3.axisLeft(ySmokesScale)
+  	var xAxis = d3.axisBottom(xSmokesScale)
+  	var yAxis = d3.axisLeft(yObesityScale)
 
   	chartGroup.append("g")
   		.attr("transform", `translate(0, ${height})`)
@@ -53,31 +55,39 @@ var svg = d3
         .data(healthData)
         .enter()
         .append("circle")
-        .attr("cx", d => xIncomeScale(d.income))
-        .attr("cy", d => ySmokesScale(d.smokes))
-        .attr("r", "10")
+        .attr("cx", d => xSmokesScale(d.smokes))
+        .attr("cy", d => yObesityScale(d.obesity))
+        .attr("r", "9")
         .attr("fill", "orange")
         .attr("stroke-width", "1")
         .attr("stroke", "black")
-        .attr("opacity", ".5");
+        .attr("opacity", ".65");
+
+	var textGroup = chartGroup.selectAll("null")
+		    .data(healthData)
+		    .enter()
+		    .append("text")
+		    .attr("x", d => xSmokesScale(d.smokes))
+		    .attr("y", d => yObesityScale(d.obesity - .05))
+		    .text(d => d.abbr)
+		    .attr("font-family", "sans-serif")
+		    .attr("text-anchor", "middle")
+		    .attr("font-size", "10px")
+		    .attr("fill", "blue")
+
+	chartGroup.append("text")
+      	.attr("transform", "rotate(-90)")
+      	.attr("y", 0 - margin.left + 20)
+      	.attr("x", 0 - (height / 1.5))
+      	.attr("dy", "1em")
+      	.attr("class", "axisText")
+      	.text("Obesity Rate");
 
     chartGroup.append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", 0 - margin.left + 40)
-      .attr("x", 0 - (height / 2))
-      .attr("dy", "1em")
-      .attr("class", "axisText")
-      .text("Smoking Rate");
-
-    chartGroup.append("text")
-      .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
-      .attr("class", "axisText")
-      .text("Income in USD");
-
-	var text = circlesGroup.selectAll("text")
-		.data(healthData)
-		.enter()
-		.append("text")
-		.attr("")
+      	.attr("transform", `translate(${width / 2.5}, ${height + margin.top + 30})`)
+      	.attr("class", "axisText")
+      	.text("Smokes Frequency");
+  }).catch(function(error) {
+    console.log(error);
 
   })
