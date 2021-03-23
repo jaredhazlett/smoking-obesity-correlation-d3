@@ -1,2 +1,3 @@
 # obesity-smoking-correlation-d3
-I use d3 to plot a correlation between smoking and obesity with the state names inside of each plot point.
+This project plots smoking frequency and obesity rate among 50 states.
+
